@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 import 'package:teacher_assistant/screens/home_screen.dart';
+import 'package:teacher_assistant/screens/login_screen.dart';
 import 'package:teacher_assistant/screens/menu_screen.dart';
 import 'package:teacher_assistant/screens/profile_screen.dart';
 import 'package:teacher_assistant/screens/schedules_screen.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => SettingsScreen(),
         '/profile': (context) => ProfileScreen(),
         '/schedules': (context) => SchedulesScreen(),
+        '/login': (context) => LoginScreen(),
       },
     );
   }
