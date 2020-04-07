@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
+import 'package:teacher_assistant/screens/forgot_screen.dart';
 import 'package:teacher_assistant/screens/home_screen.dart';
 import 'package:teacher_assistant/screens/login_screen.dart';
 import 'package:teacher_assistant/screens/menu_screen.dart';
 import 'package:teacher_assistant/screens/profile_screen.dart';
 import 'package:teacher_assistant/screens/schedules_screen.dart';
-import 'package:teacher_assistant/screens/search_bar.dart';
+import 'package:teacher_assistant/screens/search_screen.dart';
 import 'package:teacher_assistant/screens/settings_screen.dart';
+import 'package:teacher_assistant/screens/signup_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +17,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  Widget loginScreen;
+  Widget signupScreen;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,19 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => SettingsScreen(),
         '/profile': (context) => ProfileScreen(),
         '/schedules': (context) => SchedulesScreen(),
-        '/login': (context) => LoginScreen(),
+        '/login': (context) {
+          if (loginScreen == null) {
+            loginScreen = LoginScreen();
+          }
+          return loginScreen;
+        },
+        '/forgot': (context) => ForgotScreen(),
+        '/signup': (context) {
+          if (signupScreen == null) {
+            signupScreen = SignupScreen();
+          }
+          return signupScreen;
+        },
       },
     );
   }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:teacher_assistant/widgets/FadeAnimation.dart';
 
-class LoginScreen extends StatefulWidget {
+class SignupScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           margin: EdgeInsets.only(top: 50),
                           child: Center(
                             child: Text(
-                              "Login",
+                              "Sign Up",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 50,
@@ -107,6 +107,37 @@ class _LoginScreenState extends State<LoginScreen> {
                           key: _formKey,
                           child: Column(
                             children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                  vertical: 4.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(color: Colors.grey[100]),
+                                  ),
+                                ),
+                                child: TextFormField(
+                                  validator: (value) {
+                                    Pattern pattern =
+                                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                    RegExp regex = new RegExp(pattern);
+                                    if (!regex.hasMatch(value))
+                                      return 'Invalid Email';
+                                    else
+                                      return null;
+                                  },
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Email",
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[400]),
+                                  ),
+                                ),
+                              ),
                               Container(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 8.0,
@@ -195,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              "Login",
+                              "Sign Up",
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.white,
@@ -207,33 +238,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 80,
+                      height: 60,
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/forgot');
+                        Navigator.pushNamed(context, '/login');
                       },
                       child: FadeAnimation(
                         2.2,
                         Text(
-                          "Forgot your password?",
-                          style: TextStyle(
-                            color: Color.fromRGBO(143, 148, 251, 1),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/signup');
-                      },
-                      child: FadeAnimation(
-                        2.2,
-                        Text(
-                          "Your first time?",
+                          "Already have an account?",
                           style: TextStyle(
                             color: Color.fromRGBO(143, 148, 251, 1),
                           ),
