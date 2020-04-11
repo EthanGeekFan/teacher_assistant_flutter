@@ -41,7 +41,11 @@ class MyApp extends StatelessWidget {
         },
         '/search': (context) => SearchScreen(),
         '/settings': (context) => SettingsScreen(),
-        '/profile': (context) => ProfileScreen(),
+        '/profile': (context) {
+          return PrefService.getBool('logedin') == true
+              ? ProfileScreen()
+              : LoginScreen();
+        },
         '/schedules': (context) => SchedulesScreen(),
         '/login': (context) {
           if (loginScreen == null) {

@@ -64,8 +64,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: CircleAvatar(
                           radius: 65.0,
                           backgroundColor: Colors.white,
-                          backgroundImage:
-                              AssetImage('assets/images/avatar.jpg'),
+                          // backgroundImage:
+                          //     AssetImage('assets/images/avatar.jpg'),
+                          backgroundImage: NetworkImage(
+                              'http://192.168.101.99/app/users/' +
+                                  PrefService.getString('username') +
+                                  '/assets/avatar.jpg'),
                         ),
                       ),
                       Padding(
@@ -73,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           top: 18,
                         ),
                         child: Text(
-                          'Yifan Yang',
+                          PrefService.getString('username'),
                           style: TextStyle(
                             fontSize: 30,
                             color: Color(0xff000000),
@@ -81,17 +85,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          '1195767760@qq.com',
-                          style: TextStyle(
-                            color: Color(0xff898989),
-                            fontSize: 20,
-                            letterSpacing: 1.3,
-                          ),
-                        ),
-                      )
+                      // Padding(
+                      //   padding: const EdgeInsets.only(top: 5),
+                      //   child: Text(
+                      //     PrefService.getString('email') == null
+                      //         ? ''
+                      //         : PrefService.getString('email'),
+                      //     style: TextStyle(
+                      //       color: Color(0xff898989),
+                      //       fontSize: 20,
+                      //       letterSpacing: 1.3,
+                      //     ),
+                      //   ),
+                      // )
                     ],
                   )
                 ],
