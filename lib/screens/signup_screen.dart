@@ -267,6 +267,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                     validator: (value) {
                                       if (value.length < 8) {
                                         return "Password must contain at least 8 characters";
+                                      } else {
+                                        return null;
                                       }
                                     },
                                     style: TextStyle(

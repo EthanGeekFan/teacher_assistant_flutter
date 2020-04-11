@@ -9,6 +9,9 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    var avatar =
+        Image.network('http://192.168.101.99/app/users/Ethan/avatar.jpg');
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -66,10 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           backgroundColor: Colors.white,
                           // backgroundImage:
                           //     AssetImage('assets/images/avatar.jpg'),
-                          backgroundImage: NetworkImage(
-                              'http://192.168.101.99/app/users/' +
-                                  PrefService.getString('username') +
-                                  '/assets/avatar.jpg'),
+                          // backgroundImage: ,
                         ),
                       ),
                       Padding(
