@@ -32,11 +32,13 @@ class MyApp extends StatelessWidget {
           // primaryColorBrightness: Brightness.dark,
           ),
       darkTheme: ThemeData.dark(),
-      // home: HomeScreen(),
-      // home: MyHomePage(),
       initialRoute: '/',
       routes: {
-        '/': (context) => MyHomePage(),
+        '/': (context) {
+          return PrefService.getBool('logedin') == true
+              ? MyHomePage()
+              : LoginScreen();
+        },
         '/search': (context) => SearchScreen(),
         '/settings': (context) => SettingsScreen(),
         '/profile': (context) => ProfileScreen(),

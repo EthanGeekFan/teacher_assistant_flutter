@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:preferences/preferences.dart';
 import 'package:teacher_assistant/models/schedule.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -142,200 +143,274 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                   child: Column(
                     children: <Widget>[
                       Expanded(
-                        child: FutureBuilder<Schedule>(
-                          future: futureSchedules[selectedIndex],
-                          builder: (context, snapshot) {
-                            bigContext = context;
-                            if (snapshot.hasData) {
-                              if (snapshot.data.message == 'Success' &&
-                                  snapshot.data.code == '66666') {
-                                var schedule = snapshot.data.schedule;
-                                var scheduleTime = snapshot.data.scheduleTime;
-                                return Container(
-                                  child: RefreshIndicator(
-                                    onRefresh: () {
-                                      setState(() {});
-                                      return futureSchedules[selectedIndex];
-                                    },
-                                    child: ReorderableListView(
-                                      children: <Widget>[
-                                        for (var index = 0;
-                                            index <
-                                                snapshot.data.schedule.length;
-                                            index++)
-                                          Dismissible(
-                                            key: ValueKey(index),
-                                            onDismissed: (direction) {
-                                              var removedName;
-                                              var removedTime;
-                                              removedName =
-                                                  schedule.removeAt(index);
-                                              if (scheduleTime != null) {
-                                                removedTime = scheduleTime
-                                                    .removeAt(index);
-                                              }
-                                              setState(() {});
-                                              refreshData(
-                                                  index: selectedIndex,
-                                                  schedule: schedule);
-                                              Scaffold.of(bigContext)
-                                                  .showSnackBar(SnackBar(
-                                                content: Text(
-                                                  'Deleted ' + removedName,
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .accentColor,
-                                                    // fontSize: 20,
-                                                  ),
-                                                ),
-                                                duration: Duration(seconds: 2),
-                                                backgroundColor: Colors.white,
-                                                elevation: 1,
-                                                action: SnackBarAction(
-                                                  label: 'Undo',
-                                                  onPressed: () {
-                                                    schedule.insert(
-                                                        index, removedName);
-                                                    if (removedTime != null) {
-                                                      scheduleTime.insert(
-                                                          index, removedTime);
+                        child: Builder(
+                          builder: (context) {
+                            if (PrefService.getBool('logedin') == true) {
+                              return FutureBuilder<Schedule>(
+                                future: futureSchedules[selectedIndex],
+                                builder: (context, snapshot) {
+                                  bigContext = context;
+                                  if (snapshot.hasData) {
+                                    if (snapshot.data.message == 'Success' &&
+                                        snapshot.data.code == '66666') {
+                                      var schedule = snapshot.data.schedule;
+                                      var scheduleTime =
+                                          snapshot.data.scheduleTime;
+                                      return Container(
+                                        child: RefreshIndicator(
+                                          onRefresh: () {
+                                            setState(() {});
+                                            return futureSchedules[
+                                                selectedIndex];
+                                          },
+                                          child: ReorderableListView(
+                                            children: <Widget>[
+                                              for (var index = 0;
+                                                  index <
+                                                      snapshot
+                                                          .data.schedule.length;
+                                                  index++)
+                                                Dismissible(
+                                                  key: ValueKey(index),
+                                                  onDismissed: (direction) {
+                                                    var removedName;
+                                                    var removedTime;
+                                                    removedName = schedule
+                                                        .removeAt(index);
+                                                    if (scheduleTime != null) {
+                                                      removedTime = scheduleTime
+                                                          .removeAt(index);
                                                     }
                                                     setState(() {});
                                                     refreshData(
                                                         index: selectedIndex,
                                                         schedule: schedule);
-                                                  },
-                                                ),
-                                              ));
-                                            },
-                                            background: Container(
-                                              color: Colors.red,
-                                              // 这里使用 ListTile 因为可以快速设置左右两端的Icon
-                                              child: Center(
-                                                child: ListTile(
-                                                  leading: Icon(
-                                                    Icons.delete,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            secondaryBackground: Container(
-                                              color: Colors.green,
-                                              // 这里使用 ListTile 因为可以快速设置左右两端的Icon
-                                              child: Center(
-                                                child: ListTile(
-                                                  trailing: Icon(
-                                                    Icons.delete,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15.0),
-                                                // color: Colors.yellow,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 20.0,
-                                                  vertical: 10.0,
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    CircleAvatar(
-                                                      radius: 35.0,
-                                                      // backgroundColor: bgcolor,
-                                                      backgroundColor:
-                                                          Colors.blue,
-                                                      foregroundColor:
-                                                          Colors.white,
-                                                      child: Text(
-                                                        schedule[index][0],
+                                                    Scaffold.of(bigContext)
+                                                        .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                        'Deleted ' +
+                                                            removedName,
                                                         style: TextStyle(
-                                                          fontSize: 30.0,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .accentColor,
+                                                          // fontSize: 20,
+                                                        ),
+                                                      ),
+                                                      duration:
+                                                          Duration(seconds: 2),
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      elevation: 1,
+                                                      action: SnackBarAction(
+                                                        label: 'Undo',
+                                                        onPressed: () {
+                                                          schedule.insert(index,
+                                                              removedName);
+                                                          if (removedTime !=
+                                                              null) {
+                                                            scheduleTime.insert(
+                                                                index,
+                                                                removedTime);
+                                                          }
+                                                          setState(() {});
+                                                          refreshData(
+                                                              index:
+                                                                  selectedIndex,
+                                                              schedule:
+                                                                  schedule);
+                                                        },
+                                                      ),
+                                                    ));
+                                                  },
+                                                  background: Container(
+                                                    color: Colors.red,
+                                                    // 这里使用 ListTile 因为可以快速设置左右两端的Icon
+                                                    child: Center(
+                                                      child: ListTile(
+                                                        leading: Icon(
+                                                          Icons.delete,
+                                                          color: Colors.white,
                                                         ),
                                                       ),
                                                     ),
-                                                    Padding(
+                                                  ),
+                                                  secondaryBackground:
+                                                      Container(
+                                                    color: Colors.green,
+                                                    // 这里使用 ListTile 因为可以快速设置左右两端的Icon
+                                                    child: Center(
+                                                      child: ListTile(
+                                                        trailing: Icon(
+                                                          Icons.delete,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15.0),
+                                                      // color: Colors.yellow,
+                                                    ),
+                                                    child: Padding(
                                                       padding:
                                                           EdgeInsets.symmetric(
-                                                        horizontal: 0.0,
+                                                        horizontal: 20.0,
+                                                        vertical: 10.0,
                                                       ),
-                                                      child: Text(
-                                                        scheduleTime == null
-                                                            ? index <
-                                                                    schedule_time
-                                                                        .length
-                                                                ? schedule_time[
-                                                                    index]
-                                                                : 'Unknown'
-                                                            : scheduleTime[
-                                                                        index] ==
-                                                                    ""
-                                                                ? index <
-                                                                        schedule_time
-                                                                            .length
-                                                                    ? schedule_time[
-                                                                        index]
-                                                                    : 'Unknown'
-                                                                : scheduleTime[
-                                                                    index],
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 25.0,
-                                                          letterSpacing: 1.0,
-                                                          fontStyle:
-                                                              FontStyle.italic,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          CircleAvatar(
+                                                            radius: 35.0,
+                                                            // backgroundColor: bgcolor,
+                                                            backgroundColor:
+                                                                Colors.blue,
+                                                            foregroundColor:
+                                                                Colors.white,
+                                                            child: Text(
+                                                              schedule[index]
+                                                                  [0],
+                                                              style: TextStyle(
+                                                                fontSize: 30.0,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                              horizontal: 0.0,
+                                                            ),
+                                                            child: Text(
+                                                              scheduleTime ==
+                                                                      null
+                                                                  ? index <
+                                                                          schedule_time
+                                                                              .length
+                                                                      ? schedule_time[
+                                                                          index]
+                                                                      : 'Unknown'
+                                                                  : scheduleTime[
+                                                                              index] ==
+                                                                          ""
+                                                                      ? index < schedule_time.length
+                                                                          ? schedule_time[
+                                                                              index]
+                                                                          : 'Unknown'
+                                                                      : scheduleTime[
+                                                                          index],
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 25.0,
+                                                                letterSpacing:
+                                                                    1.0,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                      ],
-                                      onReorder: (int oldIndex, int newIndex) {
-                                        if (oldIndex < newIndex) {
-                                          newIndex -= 1;
-                                        }
-                                        var child = schedule.removeAt(oldIndex);
-                                        schedule.insert(newIndex, child);
-                                        if (scheduleTime != null) {
-                                          var item =
-                                              scheduleTime.removeAt(oldIndex);
-                                          scheduleTime.insert(newIndex, item);
-                                        }
-                                        setState(() {});
-                                        refreshData(
-                                            index: selectedIndex,
-                                            schedule: schedule);
-                                      },
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                return Center(
-                                  child: Text("An API Error Occured: " +
-                                      snapshot.data.message),
-                                );
-                              }
-                            } else if (snapshot.hasError) {
+                                                  ),
+                                                )
+                                            ],
+                                            onReorder:
+                                                (int oldIndex, int newIndex) {
+                                              if (oldIndex < newIndex) {
+                                                newIndex -= 1;
+                                              }
+                                              var child =
+                                                  schedule.removeAt(oldIndex);
+                                              schedule.insert(newIndex, child);
+                                              if (scheduleTime != null) {
+                                                var item = scheduleTime
+                                                    .removeAt(oldIndex);
+                                                scheduleTime.insert(
+                                                    newIndex, item);
+                                              }
+                                              setState(() {});
+                                              refreshData(
+                                                  index: selectedIndex,
+                                                  schedule: schedule);
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return Center(
+                                        child: Text("An API Error Occured: " +
+                                            snapshot.data.message),
+                                      );
+                                    }
+                                  } else if (snapshot.hasError) {
+                                    return Center(
+                                      child: Text("A Network Error Occured"),
+                                    );
+                                  }
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                              );
+                            } else {
                               return Center(
-                                child: Text("A Network Error Occured"),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 30.0,
+                                      ),
+                                      child: Container(
+                                        child: Text(
+                                          'Oops',
+                                          style: TextStyle(
+                                            fontSize: 70,
+                                            color: Colors.black,
+                                            fontFamily: 'Sarina',
+                                            // letterSpacing: 2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'You are not logged in.',
+                                      style: TextStyle(
+                                        fontSize: 30.0,
+                                        color: Colors.grey[400],
+                                      ),
+                                    ),
+                                    FlatButton(
+                                      onPressed: () {
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context,
+                                            '/',
+                                            (route) => route == null);
+                                      },
+                                      child: Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          color: Theme.of(context).accentColor,
+                                          fontSize: 23.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               );
                             }
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
                           },
                         ),
                       )

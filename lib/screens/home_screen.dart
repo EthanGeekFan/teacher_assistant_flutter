@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:preferences/preferences.dart';
 import 'package:teacher_assistant/models/schedule.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -192,99 +193,162 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Expanded(
-                        child: FutureBuilder<Schedule>(
-                          future: specificFutureSchedules[selectedIndex],
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data.message == 'Success' &&
-                                  snapshot.data.code == '66666') {
-                                var schedule = snapshot.data.schedule;
-                                var scheduleTime = snapshot.data.scheduleTime;
-                                return Container(
-                                  child: RefreshIndicator(
-                                    onRefresh: () async {
-                                      setState(() {});
-                                      return specificFutureSchedules[
-                                          selectedIndex];
-                                    },
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: snapshot.data.schedule.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        String name = schedule[index][0];
-                                        return Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 20.0,
-                                            vertical: 10.0,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              CircleAvatar(
-                                                radius: 35.0,
-                                                // backgroundColor: bgcolor,
-                                                backgroundColor: Colors.blue,
-                                                foregroundColor: Colors.white,
-                                                child: Text(
-                                                  name,
-                                                  style: TextStyle(
-                                                    fontSize: 30.0,
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
+                        child: Builder(
+                          builder: (context) {
+                            if (PrefService.getBool('logedin') == true) {
+                              return FutureBuilder<Schedule>(
+                                future: specificFutureSchedules[selectedIndex],
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    if (snapshot.data.message == 'Success' &&
+                                        snapshot.data.code == '66666') {
+                                      var schedule = snapshot.data.schedule;
+                                      var scheduleTime =
+                                          snapshot.data.scheduleTime;
+                                      return Container(
+                                        child: RefreshIndicator(
+                                          onRefresh: () async {
+                                            setState(() {});
+                                            return specificFutureSchedules[
+                                                selectedIndex];
+                                          },
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                            itemCount:
+                                                snapshot.data.schedule.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              String name = schedule[index][0];
+                                              return Padding(
                                                 padding: EdgeInsets.symmetric(
-                                                  horizontal: 0.0,
+                                                  horizontal: 20.0,
+                                                  vertical: 10.0,
                                                 ),
-                                                child: Text(
-                                                  scheduleTime == null
-                                                      ? index <
-                                                              schedule_time
-                                                                  .length
-                                                          ? schedule_time[index]
-                                                          : 'Unknown'
-                                                      : scheduleTime[index] ==
-                                                              ""
-                                                          ? index <
-                                                                  schedule_time
-                                                                      .length
-                                                              ? schedule_time[
-                                                                  index]
-                                                              : 'Unknown'
-                                                          : scheduleTime[index],
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 25.0,
-                                                    letterSpacing: 1.0,
-                                                    fontStyle: FontStyle.italic,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                  ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    CircleAvatar(
+                                                      radius: 35.0,
+                                                      // backgroundColor: bgcolor,
+                                                      backgroundColor:
+                                                          Colors.blue,
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                      child: Text(
+                                                        name,
+                                                        style: TextStyle(
+                                                          fontSize: 30.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: 0.0,
+                                                      ),
+                                                      child: Text(
+                                                        scheduleTime == null
+                                                            ? index <
+                                                                    schedule_time
+                                                                        .length
+                                                                ? schedule_time[
+                                                                    index]
+                                                                : 'Unknown'
+                                                            : scheduleTime[
+                                                                        index] ==
+                                                                    ""
+                                                                ? index <
+                                                                        schedule_time
+                                                                            .length
+                                                                    ? schedule_time[
+                                                                        index]
+                                                                    : 'Unknown'
+                                                                : scheduleTime[
+                                                                    index],
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 25.0,
+                                                          letterSpacing: 1.0,
+                                                          fontStyle:
+                                                              FontStyle.italic,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ),
-                                            ],
+                                              );
+                                            },
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                return Center(
-                                  child: Text("An API Error Occured: " +
-                                      snapshot.data.message),
-                                );
-                              }
-                            } else if (snapshot.hasError) {
+                                        ),
+                                      );
+                                    } else {
+                                      return Center(
+                                        child: Text("An API Error Occured: " +
+                                            snapshot.data.message),
+                                      );
+                                    }
+                                  } else if (snapshot.hasError) {
+                                    return Center(
+                                      child: Text("A Network Error Occured"),
+                                    );
+                                  }
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                              );
+                            } else {
                               return Center(
-                                child: Text("A Network Error Occured"),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 30.0,
+                                      ),
+                                      child: Container(
+                                        child: Text(
+                                          'Oops',
+                                          style: TextStyle(
+                                            fontSize: 70,
+                                            color: Colors.black,
+                                            fontFamily: 'Sarina',
+                                            // letterSpacing: 2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'You are not logged in.',
+                                      style: TextStyle(
+                                        fontSize: 30.0,
+                                        color: Colors.grey[400],
+                                      ),
+                                    ),
+                                    FlatButton(
+                                      onPressed: () {
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context,
+                                            '/',
+                                            (route) => route == null);
+                                      },
+                                      child: Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          color: Theme.of(context).accentColor,
+                                          fontSize: 23.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               );
                             }
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
                           },
                         ),
                       ),

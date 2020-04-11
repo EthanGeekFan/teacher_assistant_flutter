@@ -205,41 +205,6 @@ class _MenuScreenState extends State<MenuScreen> {
                               ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                navigateTo('/login');
-                              });
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                top: menuItemPaddingTop,
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.verified_user,
-                                    color: Colors.white,
-                                    size: menuItemIconSize,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: iconTextPadding,
-                                    ),
-                                    child: Text(
-                                      "LOGIN",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: menuItemFontSize,
-                                        fontWeight: FontWeight.normal,
-                                        letterSpacing: 1.4,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ),

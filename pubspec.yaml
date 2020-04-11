@@ -110,6 +110,10 @@ flutter:
     - family: Lobster
       fonts:
         - asset: fonts/Lobster/Lobster-Regular.ttf
+    
+    - family: Sarina
+      fonts:
+        - asset: fonts/Sarina/Sarina-Regular.ttf
         
   #   - family: Schyler
   #     fonts:
