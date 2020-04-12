@@ -21,33 +21,41 @@ class _LoginScreenState extends State<LoginScreen> {
       'username': username,
       'password': password,
     };
-    final response = await http.post(
-      'http://192.168.101.99/app/api/login/',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(data),
-    );
+    try {
+      final response = await http.post(
+        'https://www.room923.cf/app/api/login/',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(data),
+      );
 
-    if (response.statusCode == 200) {
-      var re = json.decode(response.body);
-      if (re['code'] == '60001' &&
-          re['message'] == 'Login successful' &&
-          re['token'] != '') {
-        PrefService.setBool('logedin', true);
-        PrefService.setString('username', username);
-        Navigator.of(context).pushAndRemoveUntil(
-            new MaterialPageRoute(builder: (context) => MyHomePage()),
-            (route) => route == null);
+      if (response.statusCode == 200) {
+        var re = json.decode(response.body);
+        if (re['code'] == '60001' &&
+            re['message'] == 'Login successful' &&
+            re['token'] != '') {
+          PrefService.setBool('logedin', true);
+          PrefService.setString('username', username);
+          Navigator.of(context).pushAndRemoveUntil(
+              new MaterialPageRoute(builder: (context) => MyHomePage()),
+              (route) => route == null);
+        } else {
+          PrefService.setBool('logedin', false);
+          Scaffold.of(ctxt).showSnackBar(SnackBar(
+            content: Text(re['message']),
+          ));
+        }
       } else {
-        PrefService.setBool('logedin', false);
+        // throw Exception('Network request error!');
         Scaffold.of(ctxt).showSnackBar(SnackBar(
-          content: Text(re['message']),
+          content: Text('Request Error: ' + response.statusCode.toString()),
         ));
       }
-    } else {
-      // throw Exception('Network request error!');
-      print(response.statusCode);
+    } catch (e) {
+      Scaffold.of(ctxt).showSnackBar(SnackBar(
+        content: Text('Internet Connection Error'),
+      ));
     }
   }
 

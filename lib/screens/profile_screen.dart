@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:preferences/preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:connectivity/connectivity.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -19,13 +18,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void loadAvatar() async {
-    var url = 'http://192.168.101.99/app/users/' +
+    var url = 'https://www.room923.cf/app/users/' +
         PrefService.getString('username') +
         '/assets/avatar.jpg';
     Response response;
     try {
+      print('request');
       response = await http.get(url);
-      print('1');
+      print('OK');
       if (response.statusCode == 200) {
         if (mounted) {
           setState(() {

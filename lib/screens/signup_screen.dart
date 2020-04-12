@@ -22,32 +22,38 @@ class _SignupScreenState extends State<SignupScreen> {
       'username': username,
       'password': password,
     };
-    final response = await http.post(
-      'http://192.168.101.99/app/api/login/signup.php',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(data),
-    );
+    try {
+      final response = await http.post(
+        'https://www.room923.cf/app/api/login/signup.php',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(data),
+      );
 
-    if (response.statusCode == 200) {
-      var re = json.decode(response.body);
-      if (re['code'] == '60001' && re['message'] == 'Signup successful') {
-        // PrefService.setBool('logedin', true);
-        // PrefService.setString('username', username);
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/', (route) => route == null);
+      if (response.statusCode == 200) {
+        var re = json.decode(response.body);
+        if (re['code'] == '60001' && re['message'] == 'Signup successful') {
+          // PrefService.setBool('logedin', true);
+          // PrefService.setString('username', username);
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/', (route) => route == null);
+        } else {
+          print(re);
+          // PrefService.setBool('logedin', false);
+          Scaffold.of(ctxt).showSnackBar(SnackBar(
+            content: Text(re['message']),
+          ));
+        }
       } else {
-        print(re);
-        // PrefService.setBool('logedin', false);
+        // throw Exception('Network request error!');
         Scaffold.of(ctxt).showSnackBar(SnackBar(
-          content: Text(re['message']),
+          content: Text('Request error: ' + response.statusCode.toString()),
         ));
       }
-    } else {
-      // throw Exception('Network request error!');
+    } catch (e) {
       Scaffold.of(ctxt).showSnackBar(SnackBar(
-        content: Text('Network error: ' + response.statusCode.toString()),
+        content: Text('Internet Connection Error'),
       ));
     }
   }
