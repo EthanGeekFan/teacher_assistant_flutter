@@ -92,12 +92,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Radius.circular(65.0),
                           ),
                         ),
-                        child: CircleAvatar(
-                          radius: 65.0,
-                          backgroundColor: Colors.white,
-                          // backgroundImage:
-                          //     AssetImage('assets/images/avatar.jpg'),
-                          backgroundImage: avatar,
+                        child: GestureDetector(
+                          child: CircleAvatar(
+                            radius: 65.0,
+                            backgroundColor: Colors.white,
+                            backgroundImage: avatar,
+                          ),
                         ),
                       ),
                       Padding(
