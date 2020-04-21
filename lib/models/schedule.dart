@@ -37,18 +37,21 @@ Future<Schedule> fetchSchedule(int weekday) async {
   if (week > 7) {
     week = 1;
   }
-  final response = await http.get(
-      'https://www.room923.cf/app/api/getSchedule/?weekday=' + week.toString());
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return Schedule.fromJson(json.decode(response.body));
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load schedule');
-  }
+  var response;
+  try {
+    response = await http.get(
+        'https://www.room923.cf/app/api/getSchedule/?weekday=' +
+            week.toString());
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Schedule.fromJson(json.decode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load schedule');
+    }
+  } catch (e) {}
 }
 
 class ModSchedule {

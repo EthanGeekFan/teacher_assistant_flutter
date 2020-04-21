@@ -81,7 +81,6 @@ class _MyHomePageState extends State<MyHomePage>
   final double maxDragStartEdge = 250.0;
   bool _canBeDragged;
   AnimationController animationController;
-  bool ipcRefresh = false;
 
   @override
   void initState() {
