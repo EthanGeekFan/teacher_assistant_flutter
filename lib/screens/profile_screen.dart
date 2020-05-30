@@ -23,9 +23,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         '/assets/avatar.jpg';
     Response response;
     try {
-      print('request');
+      // print('request');
       response = await http.get(url);
-      print('OK');
+      // print('OK');
       if (response.statusCode == 200) {
         if (mounted) {
           setState(() {
