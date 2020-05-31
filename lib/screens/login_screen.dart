@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
+import 'package:teacher_assistant/functions/api.dart';
 import 'package:teacher_assistant/main.dart';
 import 'package:teacher_assistant/widgets/FadeAnimation.dart';
 import 'package:http/http.dart' as http;
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -16,46 +18,85 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
 
-  void _onLogin(ctxt, username, password) async {
-    Map<String, dynamic> data = {
-      'username': username,
-      'password': password,
-    };
-    try {
-      final response = await http.post(
-        'https://www.room923.cf/app/api/login/',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(data),
-      );
+  // void _onLogin(ctxt, username, password) async {
+  //   Map<String, dynamic> data = {
+  //     'username': username,
+  //     'password': password,
+  //   };
+  //   try {
+  //     final response = await http.post(
+  //       'https://www.room923.cf/app/api/login/',
+  //       headers: <String, String>{
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //       },
+  //       body: jsonEncode(data),
+  //     );
 
-      if (response.statusCode == 200) {
-        var re = json.decode(response.body);
-        if (re['code'] == '60001' &&
-            re['message'] == 'Login successful' &&
-            re['token'] != '') {
-          PrefService.setBool('logedin', true);
-          PrefService.setString('username', username);
-          Navigator.of(context).pushAndRemoveUntil(
-              new MaterialPageRoute(builder: (context) => MyHomePage()),
-              (route) => route == null);
-        } else {
-          PrefService.setBool('logedin', false);
-          Scaffold.of(ctxt).showSnackBar(SnackBar(
-            content: Text(re['message']),
-          ));
-        }
+  //     if (response.statusCode == 200) {
+  //       var re = json.decode(response.body);
+  //       if (re['code'] == '60001' &&
+  //           re['message'] == 'Login successful' &&
+  //           re['token'] != '') {
+  //         PrefService.setBool('logedin', true);
+  //         PrefService.setString('username', username);
+  //         Navigator.of(context).pushAndRemoveUntil(
+  //             new MaterialPageRoute(builder: (context) => MyHomePage()),
+  //             (route) => route == null);
+  //       } else {
+  //         PrefService.setBool('logedin', false);
+  //         Scaffold.of(ctxt).showSnackBar(SnackBar(
+  //           content: Text(re['message']),
+  //         ));
+  //       }
+  //     } else {
+  //       // throw Exception('Network request error!');
+  //       Scaffold.of(ctxt).showSnackBar(SnackBar(
+  //         content: Text('Request Error: ' + response.statusCode.toString()),
+  //       ));
+  //     }
+  //   } catch (e) {
+  //     Scaffold.of(ctxt).showSnackBar(SnackBar(
+  //       content: Text('Internet Connection Error'),
+  //     ));
+  //   }
+  // }
+
+  void _onLogin(ctxt, username, password) async {
+    final result = await graphQLClient.query(QueryOptions(
+      documentNode: gql(userLogin),
+      variables: {
+        "username": username,
+        "password": password,
+      },
+    ));
+
+    if (result.hasException) {
+      Scaffold.of(ctxt).showSnackBar(SnackBar(
+        content: Text('Query Exception: ' + result.exception.toString()),
+      ));
+    } else {
+      while (result.loading) {}
+      if (result.data['users'].length > 0) {
+        print(result.data['users'][0]);
+        var userInfo = result.data['users'][0];
+        PrefService.setBool('logedin', true);
+        PrefService.setString('username', username);
+        PrefService.setString('name', userInfo['name']);
+        PrefService.setInt('class', userInfo['class']);
+        PrefService.setInt('grade', userInfo['grade']);
+        PrefService.setInt('age', userInfo['age']);
+        PrefService.setString('email', userInfo['email']);
+        PrefService.setString('avatarUrl',
+            userInfo['avatarUrl'] == null ? null : userInfo['avatar_url']);
+        Navigator.of(context).pushAndRemoveUntil(
+            new MaterialPageRoute(builder: (context) => MyHomePage()),
+            (route) => route == null);
       } else {
-        // throw Exception('Network request error!');
+        PrefService.setBool('logedin', false);
         Scaffold.of(ctxt).showSnackBar(SnackBar(
-          content: Text('Request Error: ' + response.statusCode.toString()),
+          content: Text('Wrong username or password. Please try again.'),
         ));
       }
-    } catch (e) {
-      Scaffold.of(ctxt).showSnackBar(SnackBar(
-        content: Text('Internet Connection Error'),
-      ));
     }
   }
 

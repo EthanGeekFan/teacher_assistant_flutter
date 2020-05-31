@@ -9,6 +9,8 @@ import 'package:teacher_assistant/screens/schedules_screen.dart';
 import 'package:teacher_assistant/screens/search_screen.dart';
 import 'package:teacher_assistant/screens/settings_screen.dart';
 import 'package:teacher_assistant/screens/signup_screen.dart';
+import 'package:teacher_assistant/functions/api.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,45 +24,50 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Teacher Assistant',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          // primaryColor: Color(0xff3399FF),
-          // primaryColor: Colors.white,
-          // accentColor: Color(0xFF3399FF),
-          // primaryColorBrightness: Brightness.dark,
-          ),
-      darkTheme: ThemeData.dark(),
-      initialRoute: '/',
-      routes: {
-        '/': (context) {
-          return PrefService.getBool('logedin') == true
-              ? MyHomePage()
-              : LoginScreen();
-        },
-        '/search': (context) => SearchScreen(),
-        '/settings': (context) => SettingsScreen(),
-        '/profile': (context) {
-          return PrefService.getBool('logedin') == true
-              ? ProfileScreen()
-              : LoginScreen();
-        },
-        '/schedules': (context) => SchedulesScreen(),
-        '/login': (context) {
-          if (loginScreen == null) {
-            loginScreen = LoginScreen();
-          }
-          return loginScreen;
-        },
-        '/forgot': (context) => ForgotScreen(),
-        '/signup': (context) {
-          if (signupScreen == null) {
-            signupScreen = SignupScreen();
-          }
-          return signupScreen;
-        },
-      },
+    return GraphQLProvider(
+      client: client,
+      child: CacheProvider(
+        child: MaterialApp(
+          title: 'Teacher Assistant',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              // primaryColor: Color(0xff3399FF),
+              // primaryColor: Colors.white,
+              // accentColor: Color(0xFF3399FF),
+              // primaryColorBrightness: Brightness.dark,
+              ),
+          darkTheme: ThemeData.dark(),
+          initialRoute: '/',
+          routes: {
+            '/': (context) {
+              return PrefService.getBool('logedin') == true
+                  ? MyHomePage()
+                  : LoginScreen();
+            },
+            '/search': (context) => SearchScreen(),
+            '/settings': (context) => SettingsScreen(),
+            '/profile': (context) {
+              return PrefService.getBool('logedin') == true
+                  ? ProfileScreen()
+                  : LoginScreen();
+            },
+            '/schedules': (context) => SchedulesScreen(),
+            '/login': (context) {
+              if (loginScreen == null) {
+                loginScreen = LoginScreen();
+              }
+              return loginScreen;
+            },
+            '/forgot': (context) => ForgotScreen(),
+            '/signup': (context) {
+              if (signupScreen == null) {
+                signupScreen = SignupScreen();
+              }
+              return signupScreen;
+            },
+          },
+        ),
+      ),
     );
   }
 }
