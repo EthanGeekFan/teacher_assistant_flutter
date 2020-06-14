@@ -45,7 +45,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Schedule",
+                      "Auxchool",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: menuTitleFontSize,

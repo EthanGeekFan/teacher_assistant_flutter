@@ -143,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 result.hasException
                                     ? PrefService.getString('username')
                                     : result.loading
-                                        ? 'Loading...'
+                                        ? PrefService.getString('username')
                                         : result.data['users'][0]['username'],
                                 style: TextStyle(
                                   fontSize: 30,
@@ -207,10 +207,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 ),
                                                 Text(
                                                   result.hasException
-                                                      ? PrefService.getString(
-                                                          'username')
+                                                      ? PrefService.getInt(
+                                                              'class')
+                                                          .toString()
                                                       : result.loading
-                                                          ? 'Loading...'
+                                                          ? PrefService.getInt(
+                                                                  'class')
+                                                              .toString()
                                                           : result.data['users']
                                                                   [0]['class']
                                                               .toString(),
@@ -257,10 +260,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 ),
                                                 Text(
                                                   result.hasException
-                                                      ? PrefService.getString(
-                                                          'username')
+                                                      ? PrefService.getInt(
+                                                              'grade')
+                                                          .toString()
                                                       : result.loading
-                                                          ? 'Loading...'
+                                                          ? PrefService.getInt(
+                                                                  'grade')
+                                                              .toString()
                                                           : result.data['users']
                                                                   [0]['grade']
                                                               .toString(),
@@ -307,10 +313,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 ),
                                                 Text(
                                                   result.hasException
-                                                      ? PrefService.getString(
-                                                          'username')
+                                                      ? PrefService.getInt(
+                                                              'age')
+                                                          .toString()
                                                       : result.loading
-                                                          ? 'Loading...'
+                                                          ? PrefService.getInt(
+                                                                  'age')
+                                                              .toString()
                                                           : result.data['users']
                                                                           [0]
                                                                       ['age'] ==
@@ -364,9 +373,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 Text(
                                                   result.hasException
                                                       ? PrefService.getString(
-                                                          'username')
+                                                          'name')
                                                       : result.loading
-                                                          ? 'Loading...'
+                                                          ? PrefService
+                                                              .getString('name')
                                                           : result.data['users']
                                                                   [0]['name']
                                                               .toString(),
